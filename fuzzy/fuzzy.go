@@ -12,21 +12,20 @@ import (
 	"golang.org/x/text/unicode/norm"
 )
 
-func NoopTransformer() transform.Transformer {
+func noopTransformer() transform.Transformer {
 	return transform.Nop
 }
 
-func FoldTransformer() transform.Transformer {
+func foldTransformer() transform.Transformer {
 	return unicodeFoldTransformer{}
 }
 
-func NormalizeTransformer() transform.Transformer {
+func normalizeTransformer() transform.Transformer {
 	return transform.Chain(norm.NFD, runes.Remove(runes.In(unicode.Mn)), norm.NFC)
 }
 
-
-func NormalizedFoldTransformer() transform.Transformer {
-	return transform.Chain(NormalizeTransformer(), FoldTransformer())
+func normalizedFoldTransformer() transform.Transformer {
+	return transform.Chain(normalizeTransformer(), foldTransformer())
 }
 
 
@@ -36,22 +35,22 @@ func NormalizedFoldTransformer() transform.Transformer {
 // approximation. The method will return true only if each character in the
 // source can be found in the target and occurs after the preceding matches.
 func Match(source, target string) bool {
-	return match(source, target, NoopTransformer())
+	return match(source, target, noopTransformer())
 }
 
 // MatchFold is a case-insensitive version of Match.
 func MatchFold(source, target string) bool {
-	return match(source, target, FoldTransformer())
+	return match(source, target, foldTransformer())
 }
 
 // MatchNormalized is a unicode-normalized version of Match.
 func MatchNormalized(source, target string) bool {
-	return match(source, target, NormalizeTransformer())
+	return match(source, target, normalizeTransformer())
 }
 
 // MatchNormalizedFold is a unicode-normalized and case-insensitive version of Match.
 func MatchNormalizedFold(source, target string) bool {
-	return match(source, target, NormalizedFoldTransformer())
+	return match(source, target, normalizedFoldTransformer())
 }
 
 func match(source, target string, transformer transform.Transformer) bool {
@@ -84,22 +83,22 @@ Outer:
 
 // Find will return a list of strings in targets that fuzzy matches source.
 func Find(source string, targets []string) []string {
-	return find(source, targets, NoopTransformer())
+	return find(source, targets, noopTransformer())
 }
 
 // FindFold is a case-insensitive version of Find.
 func FindFold(source string, targets []string) []string {
-	return find(source, targets, FoldTransformer())
+	return find(source, targets, foldTransformer())
 }
 
 // FindNormalized is a unicode-normalized version of Find.
 func FindNormalized(source string, targets []string) []string {
-	return find(source, targets, NormalizeTransformer())
+	return find(source, targets, normalizeTransformer())
 }
 
 // FindNormalizedFold is a unicode-normalized and case-insensitive version of Find.
 func FindNormalizedFold(source string, targets []string) []string {
-	return find(source, targets, NormalizedFoldTransformer())
+	return find(source, targets, normalizedFoldTransformer())
 }
 
 func find(source string, targets []string, transformer transform.Transformer) []string {
@@ -121,22 +120,22 @@ func find(source string, targets []string, transformer transform.Transformer) []
 // the Levenshtein calculation, only deletions need be considered, required
 // additions and substitutions would fail the match test.
 func RankMatch(source, target string) int {
-	return rank(source, target, NoopTransformer())
+	return rank(source, target, noopTransformer())
 }
 
 // RankMatchFold is a case-insensitive version of RankMatch.
 func RankMatchFold(source, target string) int {
-	return rank(source, target, FoldTransformer())
+	return rank(source, target, foldTransformer())
 }
 
 // RankMatchNormalized is a unicode-normalized version of RankMatch.
 func RankMatchNormalized(source, target string) int {
-	return rank(source, target, NormalizeTransformer())
+	return rank(source, target, normalizeTransformer())
 }
 
 // RankMatchNormalizedFold is a unicode-normalized and case-insensitive version of RankMatch.
 func RankMatchNormalizedFold(source, target string) int {
-	return rank(source, target, NormalizedFoldTransformer())
+	return rank(source, target, normalizedFoldTransformer())
 }
 
 func rank(source, target string, transformer transform.Transformer) int {
@@ -177,22 +176,22 @@ Outer:
 // RankFind is similar to Find, except it will also rank all matches using
 // Levenshtein distance.
 func RankFind(source string, targets []string) Ranks {
-	return rankFind(source, targets, NoopTransformer())
+	return rankFind(source, targets, noopTransformer())
 }
 
 // RankFindFold is a case-insensitive version of RankFind.
 func RankFindFold(source string, targets []string) Ranks {
-	return rankFind(source, targets, FoldTransformer())
+	return rankFind(source, targets, foldTransformer())
 }
 
 // RankFindNormalized is a unicode-normalized version of RankFind.
 func RankFindNormalized(source string, targets []string) Ranks {
-	return rankFind(source, targets, NormalizeTransformer())
+	return rankFind(source, targets, normalizeTransformer())
 }
 
 // RankFindNormalizedFold is a unicode-normalized and case-insensitive version of RankFind.
 func RankFindNormalizedFold(source string, targets []string) Ranks {
-	return rankFind(source, targets, NormalizedFoldTransformer())
+	return rankFind(source, targets, normalizedFoldTransformer())
 }
 
 func rankFind(source string, targets []string, transformer transform.Transformer) Ranks {
